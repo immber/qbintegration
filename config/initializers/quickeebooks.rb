@@ -1,5 +1,5 @@
-QB_KEY=env["QB_KEY"]
-QB_SECRET=env["QB_SECRET"]
+QB_KEY=ENV["QB_KEY"]
+QB_SECRET=ENV["QB_SECRET"]
 
 $qb_oauth_consumer = OAuth::Consumer.new(QB_KEY, QB_SECRET, {
     :site                 => "https://oauth.intuit.com",
