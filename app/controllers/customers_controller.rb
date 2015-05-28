@@ -61,6 +61,24 @@ class CustomersController < ApplicationController
     end
   end
 
+  def authenticate
+    callback = oauth_callback_customers_url
+    token = $qb_oauth_consumer.get_request_token(:oauth_callback => callback)
+    # session[:qb_request_token] = token
+    session[:qb_request_token] = Marshal.dump(token)
+    redirect_to("https://appcenter.intuit.com/Connect/Begin?oauth_token=#{token.token}") and return
+  end
+
+  def oauth_callback
+    # at = session[:qb_request_token].get_access_token(:oauth_verifier => params[:oauth_verifier])
+    at = Marshal.load(session[:qb_request_token]).get_access_token(:oauth_verifier => params[:oauth_verifier])
+    session[:token] = at.token
+    session[:secret] = at.secret
+    session[:realm_id] = params['realmId']
+    redirect_to root_url, notice: "Your QuickBooks account has been successfully linked."
+  end
+
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_customer
